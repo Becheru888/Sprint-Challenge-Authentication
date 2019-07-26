@@ -2,7 +2,7 @@ const axios = require('axios');
 const bcrypt = require('bcryptjs')
 const token = require('../auth/token')
 
-const Users =  require('./routes-model')
+const Users = require('./routes-model')
 
 const { authenticate } = require('../auth/authenticate');
 
@@ -17,20 +17,37 @@ function register(req, res) {
   const hash = bcrypt.hashSync(user.password, 5);
   user.password = hash;
   Users.add(user)
-  .then(saved =>{
-    const newToken = token.generateToken(user);
-    res.status(201).json({saved, message:`registered, ${newToken}`})
-  }).catch(error =>{
-    res.status(500).json(error)
-  })
+    .then(saved => {
+      const newToken = token.generateToken(user);
+      res.status(201).json({ saved, message: `registered, ${newToken}` })
+    }).catch(error => {
+      res.status(500).json(error)
+    })
 
 }
 
 function login(req, res) {
-  // implement user login
+  let { username, password } = req.body;
+  Users.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const newToken = token.generateToken(user);
+        res.status(200).json(
+          {
+            message: `Welcome ${user.username}! This is you token`,
+            newToken,
+            roles: newToken.roles
+          });
+      }else {
+        res.status(401).json({message:"Invalid Credentials"});
+      }
+    }).catch(error =>{
+      res.status(500).json(error)
+    })
 }
 
-function getJokes(req, res) {
+function getJokes(_, res) {
   const requestOptions = {
     headers: { accept: 'application/json' },
   };
