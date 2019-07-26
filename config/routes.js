@@ -1,5 +1,8 @@
 const axios = require('axios');
 const bcrypt = require('bcryptjs')
+const token = require('../auth/token')
+
+const Users =  require('./routes-model')
 
 const { authenticate } = require('../auth/authenticate');
 
@@ -10,7 +13,17 @@ module.exports = server => {
 };
 
 function register(req, res) {
-  // implement user registration
+  const user = req.body;
+  const hash = bcrypt.hashSync(user.password, 5);
+  user.password = hash;
+  Users.add(user)
+  .then(saved =>{
+    const newToken = token.generateToken(user);
+    res.status(201).json({saved, message:`registered, ${newToken}`})
+  }).catch(error =>{
+    res.status(500).json(error)
+  })
+
 }
 
 function login(req, res) {
