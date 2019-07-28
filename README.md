@@ -33,6 +33,15 @@ Demonstrate your understanding of this week's concepts by answering the followin
 1. What does bcrypt do to slow down attackers?
 1. What are the three parts of the JSON Web Token?
 
+* The simplest reason to use Sessions is to be able to persist user data across multiple pages on the client side. If a user logs in, a session allows us to let said user access all the necessary areas of our site without continually logging in each time. By logging in, the user has started a session that keeps the users ability to do certain things for a set period of time. Furthermore, on the server side, we can see how many users are active, for how long, we can end sessions and generally have a lot of control of the user experience.
+
+* BCrypt hashes our passwords along with a salt. It goes through the process and extremely large number of times, set by the user, which makes things like rainbow attacks incredibly slow and arduous for any kind of malicious attacker.
+
+* The addition of a salt to the password means that a rainbow table would have to be created for every single password, not just one large table. This massively increases the workload for the attacker and, hopefully, puts the amount of processing needed to decipher the password in unrealistic time lengths.
+
+* Header, Payload and Signature.
+
+
 ## Project Set Up
 
 Follow these steps to set up and work on your project:
